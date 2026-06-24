@@ -16,6 +16,7 @@
 <div class="card" id="agendamentoCard">
   <img src="logo.png" alt="Logo da Clínica Odontológica" class="logo">
   <h2>Carregando...</h2>
+
   <p id="paciente"></p>
   <p id="data"></p>
   <p id="hora"></p>
@@ -25,29 +26,34 @@
     Confirmar Consulta
   </button>
 
-   <button class="whatsappcancelamento" id="btnWhatscancelamento">
-  <i class="fa-brands fa-whatsapp"></i>
-  Remarcar Consulta
+  <button class="whatsappcancelamento" id="btnWhatscancelamento">
+    <i class="fa-brands fa-whatsapp"></i>
+    Remarcar Consulta
   </button>
 
-
   <div class="social-buttons">
-  <a href="https://maps.app.goo.gl/djJFQXFBfzmuq4HP6" 
-     target="_blank" class="icon-btn maps" title="Localização">
-    <i class="fa-solid fa-location-dot"></i>
-  </a>
+    <a href="https://maps.app.goo.gl/djJFQXFBfzmuq4HP6" 
+       target="_blank" class="icon-btn maps" title="Localização">
+      <i class="fa-solid fa-location-dot"></i>
+    </a>
 
-  <a href="https://www.instagram.com/asenseodontologia" 
-     target="_blank" class="icon-btn insta" title="Instagram">
-    <i class="fa-brands fa-instagram"></i>
-  </a>
+    <a href="https://www.instagram.com/asenseodontologia" 
+       target="_blank" class="icon-btn insta" title="Instagram">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
 
-  <a href="https://asenseodontologia.com/" 
-     target="_blank" class="icon-btn site" title="Site">
-    <i class="fa-solid fa-globe"></i>
-  </a>
+    <a href="https://asenseodontologia.com/" 
+       target="_blank" class="icon-btn site" title="Site">
+      <i class="fa-solid fa-globe"></i>
+    </a>
+  </div>
+
+  <!-- RODAPÉ -->
+  <p style="font-size:10px;text-align:center;color:#999;margin-top:20px;">
+    Feito por <a href="https://github.com/LuanaBani" target="_blank">Lua</a>
+  </p>
+
 </div>
-
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
@@ -80,24 +86,14 @@
   const horaEl = document.getElementById("hora");
   const btnWhats = document.getElementById("btnWhats");
   const btnWhatscancelamento = document.getElementById("btnWhatscancelamento");
-  const btnAgenda = document.getElementById("btnAgenda");
 
-  const formatDateLocal = (d) => {
-    const ano = d.getFullYear();
-    const mes = String(d.getMonth()+1).padStart(2,"0");
-    const dia = String(d.getDate()).padStart(2,"0");
-    const hora = String(d.getHours()).padStart(2,"0");
-    const min = String(d.getMinutes()).padStart(2,"0");
-    return `${ano}${mes}${dia}T${hora}${min}00`;
-  };
+  if (id) {
+    const docRef = doc(db, "agendamentos", id);
 
-  const padronizarHora = (horaString) => horaString.replace("h",":").replace(/[^0-9:]/g,"");
-
-  if(id){
-    const docRef = doc(db,"agendamentos",id);
     getDoc(docRef).then(docSnap => {
-      if(docSnap.exists()){
+      if (docSnap.exists()) {
         const agendamento = docSnap.data();
+
         tituloEl.textContent = "Confirmação de Agendamento";
         pacienteEl.textContent = "Paciente: " + agendamento.paciente;
         dataEl.textContent = "Data: " + agendamento.data;
@@ -106,13 +102,13 @@
         btnWhats.onclick = () => {
           const numero = whatsAppMap[agendamento.setor] || whatsAppMap["isa"];
           const mensagem = `Olá, eu ${agendamento.paciente}, confirmo meu agendamento para o dia ${agendamento.data} às ${agendamento.hora}.`;
-          window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`,"_blank");
+          window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`, "_blank");
         };
 
         btnWhatscancelamento.onclick = () => {
           const numero = whatsAppMap[agendamento.setor] || whatsAppMap["isa"];
-          const mensagem = `Olá, eu ${agendamento.paciente}, não vou conseguir comparecer na consulta do ${agendamento.data} às ${agendamento.hora}`;
-          window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)} e desejo reagendar a minha consulta`,"_blank");
+          const mensagem = `Olá, eu ${agendamento.paciente}, não vou conseguir comparecer na consulta do ${agendamento.data} às ${agendamento.hora}. Desejo reagendar.`;
+          window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`, "_blank");
         };
 
       } else {
@@ -122,13 +118,10 @@
       console.error(err);
       tituloEl.textContent = "Erro ao carregar agendamento";
     });
+
   } else {
     tituloEl.textContent = "Nenhum ID informado";
   }
-
-  <p style="font-size:10px;text-align:center;color:#999;margin-top:20px;">
-  Feito por <a href="https://github.com/LuanaBani" target="_blank">Lua</a>
-</p>
 </script>
 
 </body>
