@@ -31,11 +31,6 @@
   </button>
 
 
-  <button class="agenda" id="btnAgenda">
-    <i class="fa-brands fa-google"></i>
-    Adicionar ao Google Agenda
-  </button>
-
   <div class="social-buttons">
   <a href="https://maps.app.goo.gl/djJFQXFBfzmuq4HP6" 
      target="_blank" class="icon-btn maps" title="Localização">
@@ -120,14 +115,6 @@
           window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)} e desejo reagendar a minha consulta`,"_blank");
         };
 
-        btnAgenda.onclick = () => {
-          const dataSplit = agendamento.data.split("/");
-          const horaSplit = padronizarHora(agendamento.hora).split(":");
-          const start = new Date(dataSplit[2],dataSplit[1]-1,dataSplit[0],horaSplit[0],horaSplit[1]);
-          const end = new Date(start.getTime()+30*60*1000);
-          const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=Consulta Dentista - ${agendamento.paciente}&dates=${formatDateLocal(start)}/${formatDateLocal(end)}&details=Agendamento confirmado&sf=true&output=xml`;
-          window.open(url,"_blank");
-        };
       } else {
         tituloEl.textContent = "Agendamento não encontrado";
       }
